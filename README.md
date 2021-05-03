@@ -1,4 +1,4 @@
-# Genesis Cloud Challenge
+# Web Developer Coding Exercise
 Hi there! This is my trial solution for the coding challenge (there will be updates in the future).
 
 The languages I used is 
@@ -6,8 +6,10 @@ The languages I used is
 * Backend: Django
 
 ## Points to note
-* There are restrictions on my account, that only 2 instances could be created to be active.
-* The link on https://developers.genesiscloud.com/examples is wrong(it should be )
+This application is not prefect. There are some points remain to be fixed.
+* (Major) Error occurs when user create book with ISBN, which already exists.
+* (Minor) The navigation tab on the top has UI problems.
+* (Minor) When user click edit button on the table on Book List page, and immediately return to Book List page by clicking "Book List" tab, and then click "Create Book" tab, the fields are non-empty.
 
 ## Setup
 1. Clone this repo and change to the project directory 
@@ -21,9 +23,8 @@ source env/bin/activate  # On Windows use `env\Scripts\activate`
 pip install django
 pip install djangorestframework
 
-<!-- # Install additional libraries, whcih is useful to build specific django functions
+# Install additional libraries, whcih is useful to build specific django functions
 pip install django-background-tasks
-pip install requests -->
 ```
 3. Install frontend packages
 ```
