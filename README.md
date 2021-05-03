@@ -38,6 +38,7 @@ npm run build //For dev use npm run dev
 
 5. Change back to the main project directory, and then create an initial migration
 ```
+cd ..
 python manage.py makemigrations
 python manage.py migrate
 ```
