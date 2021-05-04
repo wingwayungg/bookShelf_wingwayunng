@@ -18,23 +18,6 @@ import BookDetail from "./pages/BookDetail";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.handleBookSaved = this.handleBookSaved.bind(this);
-    this.handleBookEdit = this.handleBookEdit.bind(this);
-    this.state = { bookSaved: false, isEdit: false, editingISBN: "" };
-  }
-
-  handleBookSaved() {
-    this.setState({ bookSaved: true }, () => {
-      //callback function so that users could navigate to Create tab again
-      this.setState({ bookSaved: false });
-    });
-  }
-
-  handleBookEdit(ISBN) {
-    this.setState({ isEdit: true, editingISBN: ISBN }, () => {
-      //callback function so that users could navigate to List tab again
-      this.setState({ isEdit: false });
-    });
   }
 
   render() {
@@ -51,21 +34,10 @@ class App extends Component {
               /* render routing logic of react-router-dom */
               <Switch>
                 <Route exact path="/list">
-                  {this.state.isEdit ? (
-                    <Redirect to="/book" />
-                  ) : (
-                    <BookList handleBookEdit={this.handleBookEdit} />
-                  )}
+                  <BookList />
                 </Route>
-                <Route path="/book/:id">
-                  {this.state.bookSaved ? (
-                    <Redirect to="/list" />
-                  ) : (
-                    <BookDetail
-                      handleBookSaved={this.handleBookSaved}
-                      editingISBN={this.state.editingISBN}
-                    />
-                  )}
+                <Route path="/book/:ISBN_url_parm?">
+                  <BookDetail />
                 </Route>
               </Switch>
             }

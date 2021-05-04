@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 // @material-ui
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -52,6 +53,7 @@ const StyledTableCell = withStyles((theme) => ({
 // export a bookList page component
 export default function BookList(props) {
   const classes = useStyles();
+  let history = useHistory();
 
   const [items, setItem] = useState([]);
 
@@ -62,21 +64,13 @@ export default function BookList(props) {
 
   const searchBookList = () => {
     fetch(
-      "book/list?ISBN=" +
-        searchISBN +
-        "&name=" +
-        searchName +
-        "&authors=" +
-        searchAuthors +
-        "&short_annotation=" +
-        searchAnnotation
+      `/book/list?ISBN=${searchISBN}&name=${searchName}&authors=${searchAuthors}&short_annotation=${searchAnnotation}`
     )
       .then((response) => {
         if (response.status > 400) {
           // return this.setState(() => {
           // });
         }
-        console.log("response: ", response);
         return response.json();
       })
       .then((data) => {
@@ -85,13 +79,12 @@ export default function BookList(props) {
   };
 
   const deleteBook = (ISBN) => {
-    fetch("book/delete/" + ISBN, {
+    fetch(`/book/delete/${ISBN}`, {
       method: "DELETE",
     })
       .then((response) => {
         if (response.status > 400) {
         }
-        console.log("response: ", response);
         // return response.json();
         return;
       })
@@ -101,11 +94,10 @@ export default function BookList(props) {
   };
 
   const editBook = (ISBN) => {
-    props.handleBookEdit(ISBN);
+    history.push(`../book/${ISBN}`);
   };
 
   useEffect(() => {
-    // props.handleBookEdit("");
     searchBookList();
   }, [searchISBN, searchName, searchAuthors, searchAnnotation]);
 

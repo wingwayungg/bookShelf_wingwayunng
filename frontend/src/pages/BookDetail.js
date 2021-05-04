@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  useParams
-} from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
@@ -11,14 +9,15 @@ import "react-toastify/dist/ReactToastify.css";
 
 // export a create page component
 export default function BookDetail(props) {
-  // let { id } = useParams();
-  const [ISBN, setISBN] = useState("");
+  let { ISBN_url_parm } = useParams();
+  let history = useHistory();
+  const [ISBN, setISBN] = useState(ISBN_url_parm || "");
   const [name, setName] = useState("");
   const [authors, setAuthors] = useState("");
   const [short_annotation, setShort_annotation] = useState("");
 
   const notify = () =>
-    toast.success((props.editingISBN ? "Edit" : "Create") + " successfully!");
+    toast.success(`${ISBN_url_parm ? "Edit" : "Create"} successfully!`);
 
   const handleSubmit = () => {
     const data = {
@@ -28,18 +27,12 @@ export default function BookDetail(props) {
       short_annotation: short_annotation,
     };
 
-    fetch(
-      props.editingISBN ? "book/edit/" + props.editingISBN : "book/create/",
-      {
-        method: props.editingISBN ? "PUT" : "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-      }
-    )
+    fetch(ISBN_url_parm ? `/book/edit/${ISBN_url_parm}` : "book/create/", {
+      method: ISBN_url_parm ? "PUT" : "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-type": "application/json; charset=UTF-8" },
+    })
       .then((response) => {
-        if (response.status === 400) {
-          throw new Error("Duplicated ISBN");
-        }
         if (response.status > 400) {
           throw new Error("Network response was not ok");
         }
@@ -47,7 +40,7 @@ export default function BookDetail(props) {
       })
       .then((data) => {
         notify();
-        props.handleBookSaved(true);
+        history.push(`../list`);
       })
       .catch((error) => {
         console.error(
@@ -58,10 +51,8 @@ export default function BookDetail(props) {
   };
 
   useEffect(() => {
-    // console.log("id", id);
-    console.log('props: ', props);
-    if (props.editingISBN) {
-      fetch("book/edit/" + props.editingISBN, {
+    if (ISBN_url_parm) {
+      fetch(`/book/edit/${ISBN_url_parm}`, {
         headers: { "Content-type": "application/json; charset=UTF-8" },
       })
         .then((response) => {
@@ -70,7 +61,6 @@ export default function BookDetail(props) {
           return response.json();
         })
         .then((data) => {
-          setISBN(data.ISBN);
           setName(data.name);
           setAuthors(data.authors);
           setShort_annotation(data.short_annotation);
@@ -78,7 +68,7 @@ export default function BookDetail(props) {
     } else {
       // add ISBN Validation for creating Book
       let ISBNArray = "";
-      fetch("book/list")
+      fetch("/book/list")
         .then((response) => response.json())
         .then((data) => {
           ISBNArray = data.map((x) => x.ISBN);
@@ -105,10 +95,11 @@ export default function BookDetail(props) {
           name="ISBN"
           value={ISBN}
           InputProps={{
-            readOnly: !!props.editingISBN,
+            readOnly: !!ISBN_url_parm,
           }}
-          variant={!!props.editingISBN ? "filled" : "outlined"}
-          {...(!props.editingISBN && { // validate only when creating
+          variant={!!ISBN_url_parm ? "filled" : "outlined"}
+          {...(!ISBN_url_parm && {
+            // validate only when creating
             validators: [
               "required",
               "minNumber:0",
