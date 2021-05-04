@@ -50,16 +50,16 @@ class App extends Component {
             {
               /* render routing logic of react-router-dom */
               <Switch>
-                <Route exact path="/">
+                <Route exact path="/list">
                   {this.state.isEdit ? (
                     <Redirect to="/book" />
                   ) : (
                     <BookList handleBookEdit={this.handleBookEdit} />
                   )}
                 </Route>
-                <Route path="/book">
+                <Route path="/book/:id">
                   {this.state.bookSaved ? (
-                    <Redirect to="/" />
+                    <Redirect to="/list" />
                   ) : (
                     <BookDetail
                       handleBookSaved={this.handleBookSaved}

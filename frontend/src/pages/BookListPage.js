@@ -31,12 +31,12 @@ const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
   },
-  noData:{
+  noData: {
     color: "gray",
     marginTop: "10px",
     fontSize: "30px",
-    textAlign: "center"
-  }
+    textAlign: "center",
+  },
 }));
 
 const StyledTableCell = withStyles((theme) => ({
@@ -105,6 +105,7 @@ export default function BookList(props) {
   };
 
   useEffect(() => {
+    // props.handleBookEdit("");
     searchBookList();
   }, [searchISBN, searchName, searchAuthors, searchAnnotation]);
 
@@ -192,7 +193,7 @@ export default function BookList(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {!items.length && (<div className={classes.noData}> No data to show</div>)}
+      {!items.length && <div className={classes.noData}> No data to show</div>}
       <ToastContainer hideProgressBar autoClose={1000} />
     </div>
   );

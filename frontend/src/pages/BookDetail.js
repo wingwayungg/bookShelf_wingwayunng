@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import {
+  useParams
+} from "react-router-dom";
 import { Button } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
@@ -8,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // export a create page component
 export default function BookDetail(props) {
+  // let { id } = useParams();
   const [ISBN, setISBN] = useState("");
   const [name, setName] = useState("");
   const [authors, setAuthors] = useState("");
@@ -34,7 +38,7 @@ export default function BookDetail(props) {
     )
       .then((response) => {
         if (response.status === 400) {
-            throw new Error("Duplicated ISBN");
+          throw new Error("Duplicated ISBN");
         }
         if (response.status > 400) {
           throw new Error("Network response was not ok");
@@ -54,6 +58,8 @@ export default function BookDetail(props) {
   };
 
   useEffect(() => {
+    // console.log("id", id);
+    console.log('props: ', props);
     if (props.editingISBN) {
       fetch("book/edit/" + props.editingISBN, {
         headers: { "Content-type": "application/json; charset=UTF-8" },
@@ -69,6 +75,19 @@ export default function BookDetail(props) {
           setAuthors(data.authors);
           setShort_annotation(data.short_annotation);
         });
+    } else {
+      // add ISBN Validation for creating Book
+      let ISBNArray = "";
+      fetch("book/list")
+        .then((response) => response.json())
+        .then((data) => {
+          ISBNArray = data.map((x) => x.ISBN);
+        });
+
+      ValidatorForm.addValidationRule(
+        "isISBNExisted",
+        (value) => !ISBNArray.includes(Number(value))
+      );
     }
   }, []);
 
@@ -89,8 +108,20 @@ export default function BookDetail(props) {
             readOnly: !!props.editingISBN,
           }}
           variant={!!props.editingISBN ? "filled" : "outlined"}
-          validators={["required", 'minNumber:0', 'matchRegexp:^[0-9]*$']}
-          errorMessages={["this field is required", "value must be non-negative number", "value must be non-negative number"]}
+          {...(!props.editingISBN && { // validate only when creating
+            validators: [
+              "required",
+              "minNumber:0",
+              "matchRegexp:^[0-9]*$",
+              "isISBNExisted",
+            ],
+            errorMessages: [
+              "this field is required",
+              "value must be non-negative number",
+              "value must be non-negative number",
+              "this ISBN already exists",
+            ],
+          })}
         />
         <TextValidator
           className="halfLengthInput"
@@ -129,7 +160,12 @@ export default function BookDetail(props) {
           variant="outlined"
           fullWidth
         />
-        <Button className="save" variant="outlined" color="primary" type="submit">
+        <Button
+          className="save"
+          variant="outlined"
+          color="primary"
+          type="submit"
+        >
           Save
         </Button>
       </ValidatorForm>
