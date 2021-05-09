@@ -39,6 +39,7 @@ class App extends Component {
                 <Route path="/book/:ISBN_url_parm?">
                   <BookDetail />
                 </Route>
+                <Redirect from="/" to="/list" />
               </Switch>
             }
           </div>
