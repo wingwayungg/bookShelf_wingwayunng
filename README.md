@@ -5,11 +5,10 @@ The languages I used is
 * Frontend: React
 * Backend: Django
 
-## Points to note
+## Bugs
 This application is not prefect. There are some points remain to be fixed.
-* (Major) Error occurs when user create book with ISBN, which already exists.
 * (Minor) The navigation tab on the top has UI problems.
-* (Minor) When user click edit button on the table on Book List page, and immediately return to Book List page by clicking "Book List" tab, and then click "Create Book" tab, the fields are non-empty.
+* (Minor) The search function using the authors field is not well implemented (e.g. Suppose William Shakespeare and Franz Kafka are the authors of the books. When the user enters "Shakespeare,Kafka", the book should appear in the search result).
 
 ## Setup
 1. Clone this repo and change to the project directory 
