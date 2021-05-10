@@ -1,4 +1,7 @@
 # Web Developer Coding Exercise
+[![React Frontend](https://img.shields.io/badge/react-frondend-brightgreen)](http://realworld.io)
+[![Django Backend](https://img.shields.io/badge/django-backend-yellowgreen)](http://realworld.io)
+
 Hi there! This is my trial solution for the coding challenge (there will be updates in the future).
 
 The languages I used is 
